@@ -19,6 +19,12 @@ public class AppConfig {
     @Value("${apikey}")
     private String apiKey;
 
+    @Value("${redis.host}")
+    private String redisHost;
+
+    @Value("${redis.port}")
+    private int redisPort;
+
     @Bean("neoRestTemplate")
     RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
@@ -34,7 +40,7 @@ public class AppConfig {
 
     @Bean
     RedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration("localhost", 6379);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(config);
     }
 
