@@ -6,7 +6,7 @@ import io.github.vnizar.app.dto.NearEarthObjectDto;
 import java.util.List;
 
 public interface NeoService {
-    List<FeedDto> getFeed(String startDate, String endDate);
+    List<FeedDto> getFeed(String startDate, String endDate, int size);
 
     NearEarthObjectDto getLookup(String id);
 }

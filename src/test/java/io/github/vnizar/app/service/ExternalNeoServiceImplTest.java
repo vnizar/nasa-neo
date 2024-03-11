@@ -1,9 +1,6 @@
 package io.github.vnizar.app.service;
 
-import io.github.vnizar.app.dto.EstimatedDiameterDto;
-import io.github.vnizar.app.dto.EstimatedDiameterMinMaxDto;
-import io.github.vnizar.app.dto.FeedResponseDto;
-import io.github.vnizar.app.dto.NearEarthObjectDto;
+import io.github.vnizar.app.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,7 +37,15 @@ class ExternalNeoServiceImplTest {
                                     new EstimatedDiameterMinMaxDto(1.0f, 1.0f),
                                     new EstimatedDiameterMinMaxDto(1.0f, 1.0f)
                             ),
-                            false)
+                            false,
+                            List.of(new CloseApproachDataDto(
+                                    new MissDistanceDto(
+                                            "10",
+                                            "10",
+                                            "10",
+                                            "10"
+                                    )))
+                    )
             ));
         }};
         FeedResponseDto feedResponseDto = new FeedResponseDto(neoList, 1);

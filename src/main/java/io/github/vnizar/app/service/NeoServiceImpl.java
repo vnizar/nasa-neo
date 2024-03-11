@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,24 +34,25 @@ public class NeoServiceImpl implements NeoService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<FeedDto> getFeed(String startDate, String endDate) {
+    public List<FeedDto> getFeed(String startDate, String endDate, int size) {
         if (startDate == null || endDate == null) {
             throw new ValidationException("start date and end date should exist");
         }
 
         String data = redisTemplate.opsForValue().get(
-                RedisConstant.REDIS_FEED_KEY + startDate + "_" + endDate
+                RedisConstant.REDIS_FEED_KEY + startDate + "_" + endDate + "_" + size
         );
 
         if (data != null && !data.isEmpty()) {
             try {
-                return objectMapper.readValue(data, new TypeReference<>() {});
+                return objectMapper.readValue(data, new TypeReference<>() {
+                });
             } catch (JsonProcessingException e) {
-                return fetchAndSaveFromFeedApi(startDate, endDate);
+                return fetchAndSaveFromFeedApi(startDate, endDate, size);
             }
         }
 
-        return fetchAndSaveFromFeedApi(startDate, endDate);
+        return fetchAndSaveFromFeedApi(startDate, endDate, size);
     }
 
     @Override
@@ -87,28 +89,32 @@ public class NeoServiceImpl implements NeoService {
         return response;
     }
 
-    private List<FeedDto> fetchAndSaveFromFeedApi(String startDate, String endDate) {
+    private List<FeedDto> fetchAndSaveFromFeedApi(String startDate, String endDate, int size) {
         List<FeedDto> result = new ArrayList<>();
         FeedResponseDto response = externalNeoService.getFeed(startDate, endDate);
 
         if (response != null) {
+            List<FeedDto> feeds = new ArrayList<>();
             response.nearEarthObjects().forEach((date, item) -> {
                 item.forEach((itemKey) -> {
-                    result.add(new FeedDto(
+                    feeds.add(new FeedDto(
                             itemKey.id(),
                             itemKey.name(),
                             date,
                             itemKey.estimatedDiameter().kilometers().estimatedDiameterMin()
                                     + " - " +
                                     itemKey.estimatedDiameter().kilometers().estimatedDiameterMax()
-                                    + "km"
-
+                                    + "km",
+                            itemKey.closeApproachData().get(0).missDistance().kilometers()
                     ));
                 });
             });
+
+            feeds.sort(Comparator.comparing(FeedDto::distance));
+            result.addAll(feeds.subList(0, size));
         }
         try {
-            String key = RedisConstant.REDIS_FEED_KEY + startDate + "_" + endDate;
+            String key = RedisConstant.REDIS_FEED_KEY + startDate + "_" + endDate + "_" + size;
             redisTemplate.opsForValue().set(
                     key, objectMapper.writeValueAsString(result)
             );

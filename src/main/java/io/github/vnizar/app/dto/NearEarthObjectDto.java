@@ -2,6 +2,8 @@ package io.github.vnizar.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public record NearEarthObjectDto(
         @JsonProperty("id")
         String id,
@@ -13,6 +15,9 @@ public record NearEarthObjectDto(
         EstimatedDiameterDto estimatedDiameter,
 
         @JsonProperty("is_potentially_hazardous_asteroid")
-        boolean isPotentiallyHazard
+        boolean isPotentiallyHazard,
+
+        @JsonProperty("close_approach_data")
+        List<CloseApproachDataDto> closeApproachData
 ) {
 }

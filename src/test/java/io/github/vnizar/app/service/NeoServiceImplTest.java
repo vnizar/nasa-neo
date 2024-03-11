@@ -48,7 +48,7 @@ class NeoServiceImplTest {
         );
 
 
-        List<FeedDto> feeds = neoService.getFeed("2022-01-01", "2022-01-01");
+        List<FeedDto> feeds = neoService.getFeed("2022-01-01", "2022-01-01", 1);
 
         assertEquals(1, feeds.size());
         assertEquals("name", feeds.get(0).name());
@@ -57,7 +57,7 @@ class NeoServiceImplTest {
     @Test
     void testServiceShouldThrowValidationExceptionWhenDateIsInvalid() {
         assertThrows(ValidationException.class, () -> {
-            neoService.getFeed(null, null);
+            neoService.getFeed(null, null, 10);
         });
     }
 
@@ -71,7 +71,7 @@ class NeoServiceImplTest {
         );
         Mockito.when(stringRedisTemplate.opsForValue().get(Mockito.any())).thenReturn(null);
 
-        List<FeedDto> feeds = neoService.getFeed("2022-01-01", "2022-01-01");
+        List<FeedDto> feeds = neoService.getFeed("2022-01-01", "2022-01-01", 10);
 
         assertEquals(0, feeds.size());
     }
@@ -88,7 +88,16 @@ class NeoServiceImplTest {
                                     new EstimatedDiameterMinMaxDto(1.0f, 1.0f),
                                     new EstimatedDiameterMinMaxDto(1.0f, 1.0f)
                             ),
-                            false)
+                            false,
+                            List.of(new CloseApproachDataDto(
+                                    new MissDistanceDto(
+                                            "10",
+                                            "10",
+                                            "10",
+                                            "10"
+                                    ))
+                            )
+                    )
             ));
         }};
     }

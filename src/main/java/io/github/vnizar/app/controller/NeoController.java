@@ -30,9 +30,12 @@ public class NeoController {
             @RequestParam(name = "end_date")
             @DateTimeFormat(pattern = "dd-MM-yyyy")
             @NotNull
-            String endDate
+            String endDate,
+
+            @RequestParam(name = "size", defaultValue = "10")
+            int size
     ) {
-        return ResponseEntity.ok(neoService.getFeed(startDate, endDate));
+        return ResponseEntity.ok(neoService.getFeed(startDate, endDate, size));
     }
 
     @GetMapping("/lookup/{id}")
