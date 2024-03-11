@@ -1,16 +1,14 @@
 package io.github.vnizar.app.controller;
 
 import io.github.vnizar.app.dto.FeedDto;
+import io.github.vnizar.app.dto.NearEarthObjectDto;
 import io.github.vnizar.app.service.NeoServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,5 +33,14 @@ public class NeoController {
             String endDate
     ) {
         return ResponseEntity.ok(neoService.getFeed(startDate, endDate));
+    }
+
+    @GetMapping("/lookup/{id}")
+    public ResponseEntity<NearEarthObjectDto> getLookup(
+            @PathVariable(value = "id")
+            @NotNull
+            String id
+    ) {
+        return ResponseEntity.ok(neoService.getLookup(id));
     }
 }

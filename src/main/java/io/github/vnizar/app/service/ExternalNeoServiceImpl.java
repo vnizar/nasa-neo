@@ -1,6 +1,7 @@
 package io.github.vnizar.app.service;
 
 import io.github.vnizar.app.dto.FeedResponseDto;
+import io.github.vnizar.app.dto.NearEarthObjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,15 @@ public class ExternalNeoServiceImpl implements ExternalNeoService {
         ResponseEntity<FeedResponseDto> response = networkService.get(
                 BASE_URL + NEO_PATH_VERSION + "/feed?start_date" + startDate + "&end_date" + endDate,
                 FeedResponseDto.class
+        );
+        return response.getBody();
+    }
+
+    @Override
+    public NearEarthObjectDto getLookup(String id) {
+        ResponseEntity<NearEarthObjectDto> response = networkService.get(
+                BASE_URL + NEO_PATH_VERSION + "/neo/" + id,
+                NearEarthObjectDto.class
         );
         return response.getBody();
     }

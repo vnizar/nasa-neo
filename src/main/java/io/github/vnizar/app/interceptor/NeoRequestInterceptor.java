@@ -34,7 +34,7 @@ public class NeoRequestInterceptor implements ClientHttpRequestInterceptor {
                         .toUri();
             }
         };
-
+        System.out.println("URI "+ newRequest.getURI());
         return execution.execute(newRequest, body);
     }
 }

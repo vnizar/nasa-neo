@@ -26,9 +26,9 @@ class NeoControllerTest {
     @Test
     void testShouldReturnCorrectResponseWhenSuccess() {
         List<FeedDto> mockData = List.of(
-                new FeedDto("1", "name1", "2023-01-01", 1.0f),
-                new FeedDto("2", "name2", "2023-01-01", 1.0f),
-                new FeedDto("3", "name3", "2023-01-01", 1.0f)
+                new FeedDto("1", "name1", "2023-01-01", "1 - 2 km"),
+                new FeedDto("2", "name2", "2023-01-01", "1 - 2 km"),
+                new FeedDto("3", "name3", "2023-01-01", "1 - 2 km")
         );
 
         Mockito.when(neoService.getFeed(Mockito.anyString(), Mockito.anyString())).thenReturn(mockData);
