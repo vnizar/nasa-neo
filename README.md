@@ -55,4 +55,4 @@ Get the detail information of the asteroid.
 
 ## Architecture Overview
 Here's the overview architecture.
-[![Architecture](https://ibb.co/9HkMk7X)]
+[![Architecture](https://i.ibb.co/Qv3534B/Screen-Shot-2024-03-12-at-01-15-28.png)]
