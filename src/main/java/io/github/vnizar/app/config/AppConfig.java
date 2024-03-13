@@ -25,6 +25,12 @@ public class AppConfig {
     @Value("${redis.port}")
     private int redisPort;
 
+    @Value("${redis.username}")
+    private String redisUsername;
+
+    @Value("${redis.password}")
+    private String redisPassword;
+
     @Bean("neoRestTemplate")
     RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
@@ -41,6 +47,8 @@ public class AppConfig {
     @Bean
     RedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
+        config.setUsername(redisUsername);
+        config.setPassword(redisPassword);
         return new JedisConnectionFactory(config);
     }
 
