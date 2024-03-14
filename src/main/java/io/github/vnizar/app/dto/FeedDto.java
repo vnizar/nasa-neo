@@ -15,7 +15,7 @@ public record FeedDto(
         @JsonProperty("diameter")
         String diameter,
 
-        @JsonProperty("distance")
-        String distance
+        @JsonProperty("distance_in_km")
+        String distanceInKm
 ) {
 }

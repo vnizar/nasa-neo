@@ -39,6 +39,10 @@ public class NeoServiceImpl implements NeoService {
             throw new ValidationException("start date and end date should exist");
         }
 
+        if (size < 0) {
+            size = 1;
+        }
+
         String data = redisTemplate.opsForValue().get(
                 RedisConstant.REDIS_FEED_KEY + startDate + "_" + endDate + "_" + size
         );
@@ -96,21 +100,22 @@ public class NeoServiceImpl implements NeoService {
         if (response != null) {
             List<FeedDto> feeds = new ArrayList<>();
             response.nearEarthObjects().forEach((date, item) -> {
-                item.forEach((itemKey) -> {
-                    feeds.add(new FeedDto(
-                            itemKey.id(),
-                            itemKey.name(),
-                            date,
-                            itemKey.estimatedDiameter().kilometers().estimatedDiameterMin()
-                                    + " - " +
-                                    itemKey.estimatedDiameter().kilometers().estimatedDiameterMax()
-                                    + "km",
-                            itemKey.closeApproachData().get(0).missDistance().kilometers()
-                    ));
-                });
+                item.stream().filter((itemKey) -> !itemKey.closeApproachData().isEmpty())
+                        .forEach((itemKey) -> {
+                            feeds.add(new FeedDto(
+                                    itemKey.id(),
+                                    itemKey.name(),
+                                    date,
+                                    itemKey.estimatedDiameter().kilometers().estimatedDiameterMin()
+                                            + " - " +
+                                            itemKey.estimatedDiameter().kilometers().estimatedDiameterMax()
+                                            + "km",
+                                    itemKey.closeApproachData().get(0).missDistance().kilometers()
+                            ));
+                        });
             });
 
-            feeds.sort(Comparator.comparing(FeedDto::distance));
+            feeds.sort(Comparator.comparing(FeedDto::distanceInKm));
             result.addAll(feeds.subList(0, size));
         }
         try {
